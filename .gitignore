@@ -1,0 +1,5 @@
+vendor/
+logs/
+temp_examples/
+amo_cookie
+cdcBridge.code-workspace
