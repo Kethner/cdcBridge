@@ -7,7 +7,7 @@ use Kethner\cdcBridge\interfaces\Connector;
 // TODO add abstract class for AMO object
 class amoContact implements Connector {
 
-    private $connection;
+    public $connection;
    
     function __construct(amoConnection $connection) {
         $this->connection = $connection;
@@ -23,7 +23,7 @@ class amoContact implements Connector {
     public function set($data_object) {
     }
 
-    public static function map($response) {
+    public static function map_response($response) {
         $result['id'] = $response['id'];
         $result['name'] = $response['name'];
 

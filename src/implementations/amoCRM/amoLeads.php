@@ -7,7 +7,7 @@ use Kethner\cdcBridge\implementations\amoCRM\amoLead;
 
 class amoLeads implements Connector {
 
-    private $connection;
+    public $connection;
 
     function __construct(amoConnection $connection) {
         $this->connection = $connection;
@@ -21,7 +21,7 @@ class amoLeads implements Connector {
 
         $response = $response['_embedded']['items'];
         foreach ($response as $item) {
-            $data[] = amoLead::map($item);
+            $data[] = amoLead::map_response($item);
         }
 
         return true;
@@ -38,9 +38,6 @@ class amoLeads implements Connector {
                 }
             }
             $request['update'] = $payload;
-
-            $log = print_r($request, true);
-            file_put_contents('amo_leads_update_log.txt', $log, FILE_APPEND);
 
             if (count($payload) > 0) {
                 $response = $this->connection->request($request, 'api/v2/leads/');

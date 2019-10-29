@@ -7,8 +7,8 @@ use Kethner\cdcBridge\implementations\amoCRM\amoHelper;
 
 class amoLead implements Connector {
 
-    private $connection;
-    private $get_field;
+    public $connection;
+    public $get_field;
 
     function __construct(amoConnection $connection, $get_field = 'id') {
         $this->connection = $connection;
@@ -25,7 +25,7 @@ class amoLead implements Connector {
     public function set($data_object) {
     }
 
-    public static function map($response) {
+    public static function map_response($response) {
         $result['id'] = $response['id'];
         $result['name'] = $response['name'];
         $result['created_at'] = $response['created_at'];

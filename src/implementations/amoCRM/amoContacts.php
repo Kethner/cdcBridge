@@ -7,7 +7,7 @@ use Kethner\cdcBridge\implementations\amoCRM\amoContact;
 
 class amoContacts implements Connector {
     
-    private $connection;
+    public $connection;
 
     function __construct(amoConnection $connection) {
         $this->connection = $connection;
@@ -21,7 +21,7 @@ class amoContacts implements Connector {
 
         $response = $response['_embedded']['items'];
         foreach ($response as $item) {
-            $data[] = amoContact::map($item);
+            $data[] = amoContact::map_response($item);
         }
 
         return true;
