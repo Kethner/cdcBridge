@@ -11,10 +11,13 @@ class amoConnection implements Connection {
     private $user_hash;
     public $cookie_path;
 
-    function __construct($api_url, $user_login, $user_hash, $cookie_path = $_SERVER['PWD']) {
+    function __construct($api_url, $user_login, $user_hash, $cookie_path = false) {
         $this->api_url = $api_url;
         $this->user_login = $user_login;
         $this->user_hash = $user_hash;
+        if ($cookie_path === false) {
+            $cookie_path = $_SERVER['PWD'];
+        }
         $this->cookie_path = $cookie_path;
     }
 
