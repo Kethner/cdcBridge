@@ -9,11 +9,13 @@ class amoConnection implements Connection {
     private $api_url;
     private $user_login;
     private $user_hash;
+    public $cookie_path;
 
-    function __construct($api_url, $user_login, $user_hash) {
+    function __construct($api_url, $user_login, $user_hash, $cookie_path = $_SERVER['PWD']) {
         $this->api_url = $api_url;
         $this->user_login = $user_login;
         $this->user_hash = $user_hash;
+        $this->cookie_path = $cookie_path;
     }
 
 
@@ -62,8 +64,8 @@ class amoConnection implements Connection {
         }
         curl_setopt($curl, CURLOPT_HEADER, false);
 
-        curl_setopt($curl, CURLOPT_COOKIEFILE, $_SERVER['PWD'] . '/amo_cookie');
-        curl_setopt($curl, CURLOPT_COOKIEJAR, $_SERVER['PWD'] . '/amo_cookie');
+        curl_setopt($curl, CURLOPT_COOKIEFILE, $this->cookie_path . '/amo_cookie');
+        curl_setopt($curl, CURLOPT_COOKIEJAR, $this->cookie_path . '/amo_cookie');
         
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
