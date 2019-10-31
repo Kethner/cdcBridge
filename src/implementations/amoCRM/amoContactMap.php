@@ -13,4 +13,10 @@ class amoContactMap implements Map {
         return $data;
     }
 
+    public static function mapRequest($data) {
+        $request['id'] = $data['id'];
+        $request['updated_at'] = time();
+        return $request;
+    }
+
 }

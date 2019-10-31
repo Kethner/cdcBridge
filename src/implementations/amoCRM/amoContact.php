@@ -26,6 +26,18 @@ class amoContact implements Connector {
     }
 
     public function set($data_object) {
+        $data = &$data_object->data;
+
+        $payload[] = $this->map::mapRequest($data);
+        if (!empty($data['id'])) {
+            $request['update'] = $payload;
+        } else {
+            $request['add'] = $payload;
+        }
+        $response = $this->connection->request($request, 'api/v2/сontacts/');
+        $response = $response['_embedded']['items'][0];
+
+        $data['id'] = $response['id']; 
     }
 
 }
