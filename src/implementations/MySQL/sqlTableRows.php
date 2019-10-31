@@ -6,9 +6,9 @@ use Kethner\cdcBridge\interfaces\Connector;
 
 class sqlTableRows implements Connector {
     
-    private $connection;
-    private $table_name;
-    private $get_field;
+    public $connection;
+    public $table_name;
+    public $get_field;
 
     function __construct(sqlConnection $connection, $table_name, $get_field = 'id') {
         $this->connection = $connection;

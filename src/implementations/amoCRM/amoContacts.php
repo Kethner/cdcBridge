@@ -2,15 +2,16 @@
 namespace Kethner\cdcBridge\implementations\amoCRM;
 
 use Kethner\cdcBridge\interfaces\Connector;
-use Kethner\cdcBridge\implementations\amoCRM\amoContact;
 
 
 class amoContacts implements Connector {
     
     public $connection;
+    public $map;
 
-    function __construct(amoConnection $connection) {
+    function __construct(amoConnection $connection, $map) {
         $this->connection = $connection;
+        $this->map = $map;
     }
 
 
@@ -21,7 +22,7 @@ class amoContacts implements Connector {
 
         $response = $response['_embedded']['items'];
         foreach ($response as $item) {
-            $data[] = amoContact::map_response($item);
+            $data[] = $this->map::mapResponse($item);
         }
 
         return true;

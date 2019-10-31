@@ -2,15 +2,16 @@
 namespace Kethner\cdcBridge\implementations\amoCRM;
 
 use Kethner\cdcBridge\interfaces\Connector;
-use Kethner\cdcBridge\implementations\amoCRM\amoLead;
 
 
 class amoLeads implements Connector {
 
     public $connection;
+    public $map;
 
-    function __construct(amoConnection $connection) {
+    function __construct(amoConnection $connection, $map) {
         $this->connection = $connection;
+        $this->map = $map;
     }
 
 
@@ -21,7 +22,7 @@ class amoLeads implements Connector {
 
         $response = $response['_embedded']['items'];
         foreach ($response as $item) {
-            $data[] = amoLead::map_response($item);
+            $data[] = $this->map::mapResponse($item);
         }
 
         return true;
@@ -33,14 +34,12 @@ class amoLeads implements Connector {
         foreach (array_chunk($data, 250) as $chunk) {
             $payload = [];
             foreach ($chunk as &$item) {
-                if (empty($item['roistat_id_init']) && !empty($item['roistat_id'])) {
-                    $payload[] = amoLead::map_request($item);
-                }
+                $payload[] = $this->map::mapRequest($item);
             }
             $request['update'] = $payload;
 
             if (count($payload) > 0) {
-                $response = $this->connection->request($request, 'api/v2/leads/');
+                $this->connection->request($request, 'api/v2/leads/');
             }
         };
     }
