@@ -4,23 +4,18 @@ namespace Kethner\cdcBridge\implementations\amoCRM;
 use Kethner\cdcBridge\interfaces\Connector;
 
 
-class amoLead implements Connector {
+class amoNote implements Connector {
 
     public $connection;
-    public $get_field;
     public $map;
 
-    function __construct(amoConnection $connection, $map, $get_field = 'id') {
+    function __construct(amoConnection $connection, $map) {
         $this->connection = $connection;
         $this->map = $map;
-        $this->get_field = $get_field;
     }
 
 
     public function get($data_object) {
-        $response = $this->connection->request(null, 'api/v2/leads/?id=' . $data_object->data['id']);
-        $response = $response['_embedded']['items'][0];
-        $data_object->data = $this->map::mapResponse($response);
     }
 
     public function set($data_object) {
@@ -32,7 +27,7 @@ class amoLead implements Connector {
         } else {
             $request['update'] = $payload;
         }
-        $response = $this->connection->request($request, 'api/v2/leads/');
+        $response = $this->connection->request($request, 'api/v2/notes/');
         $response = $response['_embedded']['items'][0];
 
         $data['id'] = $response['id']; 
