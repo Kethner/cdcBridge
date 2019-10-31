@@ -16,5 +16,8 @@
         "psr-4": {
             "Kethner\\cdcBridge\\": "src/"
         }
+    },
+    "archive": {
+        "exclude": ["/examples"]
     }
 }
