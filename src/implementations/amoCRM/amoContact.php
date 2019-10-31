@@ -6,6 +6,7 @@ use Kethner\cdcBridge\interfaces\Connector;
 
 // TODO add abstract class for AMO object
 // TODO better way to extend implementations for specific project (map, custom_fields ids etc.)
+
 class amoContact implements Connector {
 
     public $connection;

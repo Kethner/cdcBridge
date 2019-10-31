@@ -14,7 +14,8 @@ class amoContactMap implements Map {
     }
 
     public static function mapRequest($data) {
-        $request['id'] = $data['id'];
+        if (!empty($data['id'])) { $request['id'] = $data['id']; }
+        if (!empty($data['name'])) { $request['name'] = $data['name']; }
         $request['updated_at'] = time();
         return $request;
     }
