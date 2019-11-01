@@ -35,7 +35,7 @@ class amoContact implements Connector {
         } else {
             $request['add'] = $payload;
         }
-        $response = $this->connection->request($request, 'api/v2/сontacts/');
+        $response = $this->connection->request($request, 'api/v2/contacts/');
         $response = $response['_embedded']['items'][0];
 
         $data['id'] = $response['id']; 
