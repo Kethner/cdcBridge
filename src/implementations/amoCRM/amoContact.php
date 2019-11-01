@@ -41,4 +41,18 @@ class amoContact implements Connector {
         $data['id'] = $response['id']; 
     }
 
+    public function find($data_object) {
+        $data = $data_object->data;
+        foreach ($data as $search_value) {
+            $response = $this->connection->request(null, 'api/v2/contacts/?query=' . urlencode($search_value));
+            $response = $response['_embedded']['items'][0];
+
+            if (is_array($response)) {
+                $data_object->data = $this->map::mapResponse($response);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
