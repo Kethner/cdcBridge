@@ -10,7 +10,7 @@ class roiVisit implements Connector {
     public $get_field;
     public $map;
 
-    function __construct(amoConnection $connection, $map, $get_field = 'id') {
+    function __construct(roiConnection $connection, $map, $get_field = 'id') {
         $this->connection = $connection;
         $this->map = $map;
         $this->get_field = $get_field;
@@ -18,24 +18,21 @@ class roiVisit implements Connector {
 
 
     public function get($data_object) {
-        $response = $this->connection->request(null, 'api/v2/leads/?id=' . $data_object->data['id']);
-        $response = $response['_embedded']['items'][0];
+        $data = &$data_object->data;
+
+        $request = [
+            "filters" => [
+                [ "id", "=", $data['id'] ]
+            ],
+            "limit" => 1,
+            "offset" => 0
+        ];
+        $response = $this->connection->request($request, 'project/site/visit/list');
+        $response = $response['data'][0];
         $data_object->data = $this->map::mapResponse($response);
     }
 
     public function set($data_object) {
-        $data = &$data_object->data;
-
-        $payload[] = $this->map::mapRequest($data);
-        if (empty($data['id'])) {
-            $request['add'] = $payload;
-        } else {
-            $request['update'] = $payload;
-        }
-        $response = $this->connection->request($request, 'api/v2/leads/');
-        $response = $response['_embedded']['items'][0];
-
-        $data['id'] = $response['id']; 
     }
 
 }

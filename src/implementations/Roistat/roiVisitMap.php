@@ -1,5 +1,5 @@
 <?php
-namespace Kethner\cdcBridge\implementations\amoCRM;
+namespace Kethner\cdcBridge\implementations\Roistat;
 
 use Kethner\cdcBridge\interfaces\Map;
 
@@ -8,17 +8,15 @@ class roiVisitMap implements Map {
 
     public static function mapResponse($response) {
         $data['id'] = $response['id'];
-        $data['name'] = $response['name'];
-        $data['created_at'] = $response['created_at'];
-        $data['contact_id'] = ($response['main_contact']) ? $response['main_contact']['id'] : null;
-        $data['contacts'] = ($response['contacts']) ? implode(' ', $response['contacts']['id']) : null;
+        $data['date'] = $response['date'];
+        $data['google_client_id'] = $response['google_client_id'];
+        $data['metrika_client_id'] = $response['metrika_client_id'];
+        $data['utm_source'] = $response['source']['utm_source'];
+        $data['utm_medium'] = $response['source']['utm_medium'];
         return $data;
     }
 
     public static function mapRequest($data) {
-        $request['id'] = $data['id'];
-        $request['updated_at'] = time();
-        return $request;
     }
 
 }

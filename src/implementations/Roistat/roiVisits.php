@@ -1,5 +1,5 @@
 <?php
-namespace Kethner\cdcBridge\implementations\amoCRM;
+namespace Kethner\cdcBridge\implementations\Roistat;
 
 use Kethner\cdcBridge\interfaces\Connector;
 
@@ -9,7 +9,7 @@ class roiVisits implements Connector {
     public $connection;
     public $map;
 
-    function __construct(amoConnection $connection, $map) {
+    function __construct(roiConnection $connection, $map) {
         $this->connection = $connection;
         $this->map = $map;
     }
@@ -17,10 +17,15 @@ class roiVisits implements Connector {
 
     public function get($data_object) {
         $data = &$data_object->data;
-        $response = $this->connection->request(null, 'api/v2/leads/?limit_rows=' . $data['limit'] . '&limit_offset=' . $data['offset']);
+
+        $request = [
+            "limit" => $data['limit'],
+            "offset" => $data['offset']
+        ];
+        $response = $this->connection->request($request, 'project/site/visit/list');
         if (empty($response)) return false;
 
-        $response = $response['_embedded']['items'];
+        $response = $response['data'];
         foreach ($response as $item) {
             $data[] = $this->map::mapResponse($item);
         }
@@ -29,19 +34,6 @@ class roiVisits implements Connector {
     }
 
     public function set($data_object) {
-        $data = $data_object->data;
-        
-        foreach (array_chunk($data, 250) as $chunk) {
-            $payload = [];
-            foreach ($chunk as &$item) {
-                $payload[] = $this->map::mapRequest($item);
-            }
-            $request['update'] = $payload;
-
-            if (count($payload) > 0) {
-                $this->connection->request($request, 'api/v2/leads/');
-            }
-        };
     }
 
 }

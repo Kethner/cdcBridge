@@ -1,19 +1,20 @@
 <?php
-namespace Kethner\cdcBridge\implementations\amoCRM;
+namespace Kethner\cdcBridge\implementations\Roistat;
 
 use Kethner\cdcBridge\interfaces\Connection;
 use Exception;
 
 class roiConnection implements Connection {
 
-    private $api_url;
+    const API_URL = "https://cloud.roistat.com/api/v1/";
     private $project;
     private $key;
+    private $auth_query;
 
-    function __construct($api_url, $project, $key) {
-        $this->api_url = $api_url;
+    function __construct($project, $key) {
         $this->project = $project;
         $this->key = $key;
+        $this->auth_query = '?' . http_build_query(['key' => $this->key, 'project' => $this->project]);
     }
 
 
@@ -33,31 +34,24 @@ class roiConnection implements Connection {
      * @return type
      * @throws Exception
      */
-    public function request($data, $link = 'private/api/auth.php?type=json') {
-        $api_url = $this->api_url;
-
-        /* Нам необходимо инициировать запрос к серверу. Воспользуемся библиотекой cURL (поставляется в составе PHP). Вы также можете использовать и кроссплатформенную программу cURL, если вы не программируете на PHP. */
-        $curl = curl_init(); // Сохраняем дескриптор сеанса cURL
-        // Устанавливаем необходимые опции для сеанса cURL
+    public function request($data, $link = '') {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, self::API_URL . $link . $this->auth_query);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_USERAGENT, 'amoCRM-API-client/1.0');
-        curl_setopt($curl, CURLOPT_URL, $api_url . $link);
+        curl_setopt($curl, CURLOPT_ENCODING, "");
+        curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         if ($data !== null) {
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
         }
-        curl_setopt($curl, CURLOPT_HEADER, false);
-
-        curl_setopt($curl, CURLOPT_COOKIEFILE, $this->cookie_path . '/amo_cookie');
-        curl_setopt($curl, CURLOPT_COOKIEJAR, $this->cookie_path . '/amo_cookie');
-        
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         $out = curl_exec($curl); // Инициируем запрос к API и сохраняем ответ в переменную
         $code = curl_getinfo($curl, CURLINFO_HTTP_CODE); // Получим HTTP-код ответа сервера
         curl_close($curl); // Завершаем сеанс cURL
-        /* Теперь мы можем обработать ответ, полученный от сервера. Это пример. Вы можете обработать данные своим способом. */
         $code = (int) $code;
         $errors = array(
             301 => 'Moved permanently',
