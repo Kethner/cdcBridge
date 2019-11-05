@@ -2,6 +2,7 @@
 namespace Kethner\cdcBridge\implementations\umiCMS;
 
 use Kethner\cdcBridge\interfaces\Connector;
+use selector;
 
 
 class umiOrders implements Connector {
@@ -15,17 +16,20 @@ class umiOrders implements Connector {
     }
 
 
+    // TODO document + unify request data format/logic
     public function get($data_object) {
         $data = &$data_object->data;
-
         $selector = new selector('objects');
         $selector->types('object-type')->name('emarket', 'order');
-        $selector->where($this->get_field)->equals(array_column($data, $this->get_field));
-
-        if (!empty($data['limit'])) {
-            $selector->limit($data['limit'], $data['offset']);
+        $selector->where('number')->isnotnull(true);
+        $ids = array_column($data, $this->get_field);
+        if (!empty($ids)) {
+            $selector->where($this->get_field)->equals(array_column($data, $this->get_field));
         }
-        if (empty($selector->length === 0)) return false;
+        if (!empty($data['limit'])) {
+            $selector->limit($data['offset'], $data['limit']);
+        }
+        if (empty($selector->length()) === 0) return false;
 
         foreach ($selector as $item) {
             $data[] = $this->map::mapResponse($item);
@@ -53,7 +57,7 @@ class umiOrders implements Connector {
 
                 $request = $this->map::mapRequest($item);
                 foreach ($request as $prop_name => $prop_value) {
-                    $object->setValue($prop_name) = $prop_value;
+                    $object->setValue($prop_name, $prop_value);
                 }
             }
         }
