@@ -11,6 +11,7 @@ class sqlTableRows implements Connector {
     public $get_field;
 
     // TODO add map? limit/offset with get?
+    // TODO display errors
     function __construct(sqlConnection $connection, $table_name, $get_field = 'id') {
         $this->connection = $connection;
         $this->table_name = $table_name;

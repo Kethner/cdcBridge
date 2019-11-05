@@ -1,5 +1,6 @@
 vendor/
 logs/
 temp_examples/
+composer.lock
 amo_cookie
 cdcBridge.code-workspace
