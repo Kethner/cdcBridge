@@ -3,7 +3,8 @@ namespace Kethner\cdcBridge\implementations\umiCMS;
 
 use Kethner\cdcBridge\interfaces\Connector;
 use selector;
-
+use umiObjectsCollection;
+use umiObjectTypesCollection;
 
 class umiOrders implements Connector {
 
