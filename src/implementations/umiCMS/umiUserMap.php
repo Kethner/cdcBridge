@@ -4,7 +4,7 @@ namespace Kethner\cdcBridge\implementations\umiCMS;
 use Kethner\cdcBridge\interfaces\Map;
 
 
-class umiUsersMap implements Map {
+class umiUserMap implements Map {
 
     public static function mapResponse($response) {
         $data = [];
