@@ -18,6 +18,7 @@ class umiOrders implements Connector {
 
 
     // TODO document + unify request data format/logic
+    // TODO option to return order objects
     public function get($data_object) {
         $data = &$data_object->data;
         $selector = new selector('objects');
@@ -40,12 +41,8 @@ class umiOrders implements Connector {
 
     public function set($data_object) {
         $data = &$data_object->data;
-
+        
         $umiObjects = umiObjectsCollection::getInstance();
-
-        $selector = new selector('objects');
-        $selector->types('object-type')->name('emarket', 'order');
-        $selector->where($this->get_field)->equals(array_column($data, $this->get_field));
 
         foreach ($data as $item) {
             if (is_array($item)) {
@@ -55,6 +52,8 @@ class umiOrders implements Connector {
                     $type_id = umiObjectTypesCollection::getInstance()->getTypeIdByHierarchyTypeName('emarket', 'order');
                     $object = $umiObjects->addObject($item['name'], $type_id);
                 }
+
+                if (!$object instanceof umiObject) { continue; }
 
                 $request = $this->map::mapRequest($item);
                 foreach ($request as $prop_name => $prop_value) {
