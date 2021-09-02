@@ -6,12 +6,13 @@ use Kethner\cdcBridge\interfaces\Connector;
 
 class amoEvents implements Connector
 {
-
     public $connection;
+    public $map;
 
-    function __construct(amoConnection $connection)
+    function __construct(amoConnection $connection, $map)
     {
         $this->connection = $connection;
+        $this->map = $map;
     }
 
 
