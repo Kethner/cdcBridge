@@ -1,10 +1,10 @@
 <?php
 use Kethner\cdcBridge\implementations\amoCRM\amoContactMap;
 
-
-class amoContactMapExt extends amoContactMap {
-
-    public static function mapResponse($response) {
+class amoContactMapExt extends amoContactMap
+{
+    public static function mapResponse($response)
+    {
         $data = parent::mapResponse($response);
 
         $custom_fields = $response['custom_fields'];
@@ -12,10 +12,9 @@ class amoContactMapExt extends amoContactMap {
         $phone_key = array_search('59483', $custom_fields_ids);
         $email_key = array_search('59485', $custom_fields_ids);
 
-        $data['phone'] = ($phone_key !== false) ? $custom_fields[$phone_key]['values'][0]['value'] : null;
-        $data['email'] = ($email_key !== false) ? $custom_fields[$email_key]['values'][0]['value'] : null;
+        $data['phone'] = $phone_key !== false ? $custom_fields[$phone_key]['values'][0]['value'] : null;
+        $data['email'] = $email_key !== false ? $custom_fields[$email_key]['values'][0]['value'] : null;
 
         return $data;
     }
-
 }

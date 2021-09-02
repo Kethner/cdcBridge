@@ -15,8 +15,12 @@ class amoEventMap implements Map
         $result['created_by'] = $response['created_by'];
         $result['created_at'] = $response['created_at'];
 
-        $result['value_after'] = $response['value_after'] ? $response['value_after'][0]['custom_field_value']['text'] : null;
-        $result['value_before'] = $response['value_before'] ? $response['value_before'][0]['custom_field_value']['text'] : null;
+        $result['value_after'] = $response['value_after']
+            ? $response['value_after'][0]['custom_field_value']['text']
+            : null;
+        $result['value_before'] = $response['value_before']
+            ? $response['value_before'][0]['custom_field_value']['text']
+            : null;
 
         return $result;
     }

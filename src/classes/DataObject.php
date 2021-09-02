@@ -1,12 +1,12 @@
 <?php
 namespace Kethner\cdcBridge\classes;
 
-class DataObject {
-
+class DataObject
+{
     public $data = [];
 
-    function __construct(Array $data) {
+    function __construct(array $data)
+    {
         $this->data = $data;
     }
-
 }

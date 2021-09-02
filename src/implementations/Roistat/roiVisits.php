@@ -3,27 +3,29 @@ namespace Kethner\cdcBridge\implementations\Roistat;
 
 use Kethner\cdcBridge\interfaces\Connector;
 
-
-class roiVisits implements Connector {
-
+class roiVisits implements Connector
+{
     public $connection;
     public $map;
 
-    function __construct(roiConnection $connection, $map) {
+    function __construct(roiConnection $connection, $map)
+    {
         $this->connection = $connection;
         $this->map = $map;
     }
 
-
-    public function get($data_object) {
+    public function get($data_object)
+    {
         $data = &$data_object->data;
 
         $request = [
-            "limit" => $data['limit'],
-            "offset" => $data['offset']
+            'limit' => $data['limit'],
+            'offset' => $data['offset'],
         ];
         $response = $this->connection->request($request, 'project/site/visit/list');
-        if (empty($response)) return false;
+        if (empty($response)) {
+            return false;
+        }
 
         $response = $response['data'];
         foreach ($response as $item) {
@@ -33,7 +35,7 @@ class roiVisits implements Connector {
         return true;
     }
 
-    public function set($data_object) {
+    public function set($data_object)
+    {
     }
-
 }

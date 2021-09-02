@@ -1,9 +1,8 @@
 <?php
 namespace Kethner\cdcBridge\interfaces;
 
-
-interface Map {
-
+interface Map
+{
     /**
      * Maps response to dataObject
      */
@@ -13,5 +12,4 @@ interface Map {
      * Maps dataObject to request
      */
     public static function mapRequest($dataObject);
-
 }

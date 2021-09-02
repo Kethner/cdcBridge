@@ -6,19 +6,20 @@ use selector;
 use umiObjectsCollection;
 use umiObjectTypesCollection;
 
-class umiUsers implements Connector {
-
+class umiUsers implements Connector
+{
     public $map;
     public $get_field;
 
-    function __construct($map, $get_field = 'id') {
+    function __construct($map, $get_field = 'id')
+    {
         $this->map = $map;
         $this->get_field = $get_field;
     }
 
-
     // TODO make commong umiObjects class instead and take umi method and name, i.e. (users, user) as arg
-    public function get($data_object) {
+    public function get($data_object)
+    {
         $data = &$data_object->data;
         $selector = new selector('objects');
         $selector->types('object-type')->name('users', 'user');
@@ -29,7 +30,9 @@ class umiUsers implements Connector {
         if (!empty($data['limit'])) {
             $selector->limit($data['offset'], $data['limit']);
         }
-        if (empty($selector->length()) === 0) return false;
+        if (empty($selector->length()) === 0) {
+            return false;
+        }
 
         foreach ($selector as $item) {
             $data[] = $this->map::mapResponse($item);
@@ -37,21 +40,24 @@ class umiUsers implements Connector {
         return true;
     }
 
-    public function set($data_object) {
+    public function set($data_object)
+    {
         $data = &$data_object->data;
 
         $umiObjects = umiObjectsCollection::getInstance();
 
         foreach ($data as $item) {
             if (is_array($item)) {
-                if(!empty($item['id'])) {
+                if (!empty($item['id'])) {
                     $object = $umiObjects->getObject($item['id']);
                 } else {
                     $type_id = umiObjectTypesCollection::getInstance()->getTypeIdByHierarchyTypeName('users', 'user');
                     $object = $umiObjects->addObject($item['name'], $type_id);
                 }
 
-                if (!$object instanceof umiObject) { continue; }
+                if (!$object instanceof umiObject) {
+                    continue;
+                }
 
                 $request = $this->map::mapRequest($item);
                 foreach ($request as $prop_name => $prop_value) {
@@ -60,5 +66,4 @@ class umiUsers implements Connector {
             }
         }
     }
-
 }

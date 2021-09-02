@@ -4,20 +4,21 @@ namespace Kethner\cdcBridge\implementations\csv;
 use Kethner\cdcBridge\interfaces\Connector;
 use LimitIterator;
 
-class csvRows implements Connector {
-
+class csvRows implements Connector
+{
     public $connection;
     public $map;
     public $get_field;
 
-    function __construct(csvConnection $connection, $map, $get_field = 'id') {
+    function __construct(csvConnection $connection, $map, $get_field = 'id')
+    {
         $this->connection = $connection;
         $this->map = $map;
         $this->get_field = $get_field;
     }
 
-
-    public function get($data_object) {
+    public function get($data_object)
+    {
         $data = &$data_object->data;
         $file = $this->connection;
 
@@ -28,14 +29,17 @@ class csvRows implements Connector {
             $fileIterator = new LimitIterator($fileStream, $file->skip_rows);
         }
 
-        foreach($fileIterator as $line) {
-            if (empty($line)) { continue; }
+        foreach ($fileIterator as $line) {
+            if (empty($line)) {
+                continue;
+            }
             $data[] = array_combine($file->headers, str_getcsv($line, $file->delimiter));
         }
     }
 
     // TODO for now just append, need to add search and replace functionality
-    public function set($data_object) {
+    public function set($data_object)
+    {
         $data = &$data_object->data;
         $file = $this->connection;
 
@@ -48,5 +52,4 @@ class csvRows implements Connector {
             }
         }
     }
-
 }

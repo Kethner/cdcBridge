@@ -1,12 +1,12 @@
 <?php
 use Kethner\cdcBridge\implementations\amoCRM\amoLeads;
 
-
-class amoLeadsExt extends amoLeads {
-
-    public function set($data_object) {
+class amoLeadsExt extends amoLeads
+{
+    public function set($data_object)
+    {
         $data = $data_object->data;
-        
+
         foreach (array_chunk($data, 250) as $chunk) {
             $payload = [];
             foreach ($chunk as &$item) {
@@ -19,7 +19,6 @@ class amoLeadsExt extends amoLeads {
             if (count($payload) > 0) {
                 $this->connection->request($request, 'api/v2/leads/');
             }
-        };
+        }
     }
-
 }

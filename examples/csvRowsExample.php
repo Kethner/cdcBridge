@@ -1,6 +1,6 @@
 <?php
 
-require_once('../vendor/autoload.php');
+require_once '../vendor/autoload.php';
 
 use Kethner\cdcBridge\classes\DataObject;
 use Kethner\cdcBridge\implementations\csv\csvConnection;

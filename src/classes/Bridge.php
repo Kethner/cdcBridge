@@ -4,34 +4,36 @@ namespace Kethner\cdcBridge\classes;
 use Kethner\cdcBridge\classes\DataObject;
 use Kethner\cdcBridge\interfaces\Connector;
 
-
-class Bridge {
-
+class Bridge
+{
     public $dataObject;
     public $connectorLeft;
     public $connectorRight;
 
-    function __construct(DataObject $dataObject, Connector $connectorLeft = null, Connector $connectorRight = null) {
+    function __construct(DataObject $dataObject, Connector $connectorLeft = null, Connector $connectorRight = null)
+    {
         $this->dataObject = clone $dataObject;
         $this->connectorLeft = $connectorLeft;
         $this->connectorRight = $connectorRight;
     }
 
-
-    public function setLeft() {
+    public function setLeft()
+    {
         $this->connectorLeft->set($this->dataObject);
     }
-    
-    public function setRight() {
+
+    public function setRight()
+    {
         $this->connectorRight->set($this->dataObject);
     }
 
-    public function getLeft() {
+    public function getLeft()
+    {
         return $this->connectorLeft->get($this->dataObject);
     }
 
-    public function getRight() {
+    public function getRight()
+    {
         return $this->connectorRight->get($this->dataObject);
     }
-
 }

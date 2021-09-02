@@ -3,10 +3,10 @@ namespace Kethner\cdcBridge\implementations\Roistat;
 
 use Kethner\cdcBridge\interfaces\Map;
 
-
-class roiVisitMap implements Map {
-
-    public static function mapResponse($response) {
+class roiVisitMap implements Map
+{
+    public static function mapResponse($response)
+    {
         $data['id'] = $response['id'];
         $data['date'] = $response['date'];
         $data['google_client_id'] = $response['google_client_id'];
@@ -16,7 +16,7 @@ class roiVisitMap implements Map {
         return $data;
     }
 
-    public static function mapRequest($data) {
+    public static function mapRequest($data)
+    {
     }
-
 }

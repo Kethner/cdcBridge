@@ -1,9 +1,8 @@
 <?php
 namespace Kethner\cdcBridge\interfaces;
 
-
-interface Connection {
-
+interface Connection
+{
     /**
      * Authorization / connection
      */
@@ -13,5 +12,4 @@ interface Connection {
      * Sending request
      */
     public function request($query, $data);
-
 }
