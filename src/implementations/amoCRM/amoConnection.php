@@ -17,7 +17,7 @@ class amoConnection implements Connection
         $this->user_login = $user_login;
         $this->user_hash = $user_hash;
         if ($cookie_path === false) {
-            $cookie_path = $_SERVER['PWD'];
+            $cookie_path = getcwd();
         }
         $this->cookie_path = $cookie_path;
     }
