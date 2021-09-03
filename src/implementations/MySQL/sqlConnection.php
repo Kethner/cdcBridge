@@ -1,4 +1,5 @@
 <?php
+
 namespace Kethner\cdcBridge\implementations\MySQL;
 
 use Kethner\cdcBridge\interfaces\Connection;
@@ -7,27 +8,27 @@ use PDO;
 class sqlConnection implements Connection
 {
     private $host;
+    private $port;
     private $dbname;
+    private $dsn;
     private $username;
     private $password;
     public $pdo;
 
-    function __construct($host, $dbname, $username, $password)
+    function __construct($host, $port = false, $dbname, $username, $password)
     {
         $this->host = $host;
+        $this->port = $port;
         $this->dbname = $dbname;
         $this->username = $username;
         $this->password = $password;
-        $this->pdo = new PDO('mysql:host=' . $host . ';dbname=' . $dbname, $username, $password);
+        $this->dsn = "mysql:host=$host;dbname=$dbname;" . ($port ? "port=$port;" : "");
+        $this->connect();
     }
 
     public function connect()
     {
-        $this->pdo = new PDO(
-            'mysql:host=' . $this->host . ';dbname=' . $this->dbname,
-            $this->username,
-            $this->password,
-        );
+        $this->pdo = new PDO($this->dsn, $this->username, $this->password);
     }
 
     public function request($query, $data = [])
