@@ -22,7 +22,7 @@ class sqlConnection implements Connection
         $this->dbname = $dbname;
         $this->username = $username;
         $this->password = $password;
-        $this->dsn = "mysql:host=$host;dbname=$dbname;" . ($port ? "port=$port;" : "");
+        $this->dsn = "mysql:host=$host;dbname=$dbname;" . ($port ? "port=$port;" : '');
         $this->connect();
     }
 

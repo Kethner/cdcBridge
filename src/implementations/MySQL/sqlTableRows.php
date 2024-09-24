@@ -40,6 +40,7 @@ class sqlTableRows implements Connector
 
     public function set($data_object)
     {
+        $queries = [];
         $data = &$data_object->data;
         foreach ($data as &$item) {
             if (is_array($item)) {
@@ -50,12 +51,37 @@ class sqlTableRows implements Connector
                     ', ',
                     array_map(function ($e) {
                         return $e . ' = :' . $e;
-                    }, array_keys($item)),
+                    }, $array_keys),
                 );
                 $query = "INSERT INTO {$this->table_name} {$columns} VALUES {$values} ON DUPLICATE KEY UPDATE {$update}";
-                $this->connection->request($query, $item);
-                $item['id'] = $this->connection->pdo->lastInsertId();
+
+                $key = implode(' ', $array_keys);
+                $queries[$key][] = array_values($item);
+
+                // TODO ignore on duplicate key?
+                $item['id'] = $this->connection->pdo->lastInsertId(); //wtf is this
             }
+
+            $this->connection->request($query, $item);
         }
+
+        // TODO оптимизация set() для sql коннекторов, данные в таблице медленно обновляются
+        // foreach ($queries as $keys => $values_arr) {
+        //     $keys = explode(' ', $keys);
+
+        //     $columns = '(' . implode(', ', $keys) . ')';
+        //     foreach ($values_arr as $v) {
+        //         $values[] = '(' . implode(',', $v) . ')';
+        //     }
+        //     $values = implode(', ', $values);
+        //     $update = implode(
+        //         ', ',
+        //         array_map(function ($e) {
+        //             return $e . ' = new.' . $e;
+        //         }, $keys),
+        //     );
+        //     $query = "INSERT INTO {$this->table_name} {$columns} VALUES {$values} as new ON DUPLICATE KEY UPDATE {$update}";
+        //     $this->connection->request($query);
+        // }
     }
 }

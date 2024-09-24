@@ -3,7 +3,9 @@ namespace Kethner\cdcBridge\implementations\amoCRM;
 
 use Kethner\cdcBridge\interfaces\Connector;
 
-class amoNote implements Connector
+// TODO можно удалить - привязка делается через класс соотв. сущности в АМО параллельно с обновлением самих объектов
+
+class amoLinks implements Connector
 {
     public $connection;
     public $map;
@@ -15,7 +17,7 @@ class amoNote implements Connector
         $params = [
             'page' => 0,
             'limit' => 10,
-            'entity_type' => null,
+            'with' => 'leads',
         ]
     ) {
         $this->connection = $connection;
@@ -29,21 +31,19 @@ class amoNote implements Connector
 
     public function set($data_object)
     {
-        $data = &$data_object->data;
+        $data = $data_object->data;
+
         foreach (array_chunk($data, 50) as $chunk) {
             $payload = [];
-
             foreach ($chunk as &$item) {
-                if ($mapped_item = $this->map::mapRequest($item)) {
-                    $payload[] = $mapped_item;
-                }
+                $payload[] = $this->map::mapRequest($item);
+            }
 
-                if (count($payload) > 0) {
-                    echo $payload[0]['id'] . "\n";
-                    $this->connection->request($payload, `api/v4/{$this->params['entity_type']}/notes/`);
-                    echo "Chunk sent \n";
-                    sleep(1);
-                }
+            if (count($payload) > 0) {
+                echo $payload[0]['id'] . "\n";
+                $this->connection->request($payload, 'api/v4/contacts', 'PATCH');
+                echo "Chunk sent \n";
+                sleep(1);
             }
         }
     }

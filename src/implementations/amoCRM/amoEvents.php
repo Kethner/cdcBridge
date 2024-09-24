@@ -4,6 +4,10 @@ namespace Kethner\cdcBridge\implementations\amoCRM;
 
 use Kethner\cdcBridge\interfaces\Connector;
 
+// TODO parent class for AMO collections
+// major (only) difference between implementations is API URI
+// TODO also filter and extra get parameters - need better way to customize
+
 class amoEvents implements Connector
 {
     public $connection;

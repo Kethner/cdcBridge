@@ -8,10 +8,24 @@ class amoLeadMap implements Map
     public static function mapResponse($response)
     {
         $data['id'] = $response['id'];
-        $data['name'] = $response['name'];
         $data['created_at'] = $response['created_at'];
-        $data['contact_id'] = $response['main_contact'] ? $response['main_contact']['id'] : null;
-        $data['contacts'] = $response['contacts'] ? implode(' ', $response['contacts']['id']) : null;
+        $data['name'] = $response['name'];
+        $data['pipeline_id'] = $response['pipeline_id'];
+
+        if ($contacts = $response['_embedded']['contacts']) {
+            foreach ($contacts as $contact) {
+                $data['contacts'][] = $contact['id'];
+                if ($contact['is_main']) {
+                    $data['contact_id'] = $contact['id'];
+                }
+            }
+            $data['contacts'] = implode(' ', $data['contacts']);
+        }
+
+        $data['companies'] = $response['_embedded']['companies']
+            ? implode(' ', array_column($response['_embedded']['companies'], 'id'))
+            : null;
+
         return $data;
     }
 

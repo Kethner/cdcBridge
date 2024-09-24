@@ -10,11 +10,19 @@ class Bridge
     public $connectorLeft;
     public $connectorRight;
 
-    function __construct(DataObject $dataObject, Connector $connectorLeft = null, Connector $connectorRight = null)
+    function __construct(Connector $connectorLeft = null, Connector $connectorRight = null)
     {
-        $this->dataObject = clone $dataObject;
+        // TODO убрать из аргумента dataObject, зачем он вообще нужен? всегда пустой или нет?  зачем клон? по идее нужен референс
+        // $this->dataObject = clone $dataObject;
+
         $this->connectorLeft = $connectorLeft;
         $this->connectorRight = $connectorRight;
+        $this->flush();
+    }
+
+    public function setDataObject(DataObject $dataObject)
+    {
+        $this->dataObject = $dataObject;
     }
 
     public function setLeft()
@@ -35,5 +43,10 @@ class Bridge
     public function getRight()
     {
         return $this->connectorRight->get($this->dataObject);
+    }
+
+    public function flush()
+    {
+        $this->dataObject = new DataObject([]);
     }
 }

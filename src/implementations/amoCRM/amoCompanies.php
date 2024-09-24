@@ -1,9 +1,10 @@
 <?php
+
 namespace Kethner\cdcBridge\implementations\amoCRM;
 
 use Kethner\cdcBridge\interfaces\Connector;
 
-class amoLeads implements Connector
+class amoCompanies implements Connector
 {
     public $connection;
     public $map;
@@ -15,7 +16,7 @@ class amoLeads implements Connector
         $params = [
             'page' => 0,
             'limit' => 10,
-            'with' => 'contacts',
+            'with' => 'leads,contacts',
         ]
     ) {
         $this->connection = $connection;
@@ -26,12 +27,12 @@ class amoLeads implements Connector
     public function get($data_object)
     {
         $data = &$data_object->data;
-        $response = $this->connection->request($this->params, 'api/v4/leads', 'GET');
+        $response = $this->connection->request($this->params, 'api/v4/companies', 'GET');
         if (empty($response)) {
             return false;
         }
 
-        $response = $response['_embedded']['leads'];
+        $response = $response['_embedded']['companies'];
         foreach ($response as $item) {
             $data[] = $this->map::mapResponse($item);
         }
@@ -44,9 +45,11 @@ class amoLeads implements Connector
     public function set($data_object)
     {
         $data = $data_object->data;
+
         foreach (array_chunk($data, 50) as $chunk) {
             $payload = [];
             $links = [];
+
             foreach ($chunk as &$item) {
                 if ($mapped_item = $this->map::mapRequest($item)) {
                     $item_links = $mapped_item['links'] ?? [];
@@ -74,13 +77,13 @@ class amoLeads implements Connector
 
             if (count($payload) > 0) {
                 echo $payload[0]['id'] . "\n";
-                $this->connection->request($payload, 'api/v4/leads', 'PATCH');
+                $this->connection->request($payload, 'api/v4/companies');
                 echo "Chunk sent \n";
                 sleep(1);
             }
 
             if (count($links) > 0) {
-                $this->connection->request($links, 'api/v4/leads/link', 'POST');
+                $this->connection->request($links, 'api/v4/companies/link', 'POST');
                 echo "Links updated \n";
                 sleep(1);
             }
